@@ -150,7 +150,7 @@ Page custom SelectionsPage
 !define MUI_FINISHPAGE_TEXT $(Finish_Text)
 !define MUI_FINISHPAGE_LINK $(Finish_Link)
 !define MUI_FINISHPAGE_LINK_LOCATION "http://www.pendrivelinux.com/boot-multiple-iso-from-usb-multiboot-usb/"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "finish.bmp"
+#!define MUI_WELCOMEFINISHPAGE_BITMAP "finish.bmp"
 !define MUI_PAGE_CUSTOMFUNCTION_PRE Finish_PreFunction
 !insertmacro MUI_PAGE_FINISH
 
@@ -1046,17 +1046,20 @@ Function DoSyslinux ; Install Syslinux on USB
   CreateDirectory $BootDir\multiboot\menu ; recursively create the directory structure if it doesn't exist
   CreateDirectory $BootDir\multiboot\ISOS ; create ISOS folder  
   DetailPrint $(ExecuteSyslinux)
-  ExecWait '$PLUGINSDIR\syslinux.exe -maf -d /multiboot $BootDir' $R8
+  ExecWait '$PLUGINSDIR\syslinux.exe -f -d /multiboot $BootDir $BootDir\multiboot\boot.bin' $R8
   DetailPrint "Syslinux Errors $R8"
   Banner::destroy
   ${If} $R8 != 0
   MessageBox MB_ICONEXCLAMATION|MB_OK $(WarningSyslinux)
   ${EndIf} 
-  DetailPrint "Creating Label MULTIBOOT on $DestDisk"
-  nsExec::ExecToLog '"cmd" /c "LABEL $DestDiskMULTIBOOT"'
+## WE DONT NEED THAT NOW  DetailPrint "Creating Label MULTIBOOT on $DestDisk"
+## WE DONT NEED THAT NOW  nsExec::ExecToLog '"cmd" /c "LABEL $DestDiskMULTIBOOT"'
   
   SkipSyslinux: 
   DetailPrint $(SkipSyslinux)
+
+  CopyFiles "$PLUGINSDIR\syslinux.exe" "$BootDir\multiboot\syslinux.exe"
+  CopyFiles "$PLUGINSDIR\boot.bin" "$BootDir\multiboot\boot.bin"
   
   ${If} ${FileExists} $BootDir\multiboot\syslinux.cfg    
    DetailPrint "A Previous MultiBoot Installation was detected... proceeding to add your new selections."
@@ -1069,6 +1072,7 @@ Function DoSyslinux ; Install Syslinux on USB
   CopyFiles "$PLUGINSDIR\YUMI-Copying.txt" "$BootDir\multiboot\YUMI-Copying.txt" 
   CopyFiles "$PLUGINSDIR\YUMI-Readme.txt" "$BootDir\multiboot\YUMI-Readme.txt" 
   CopyFiles "$PLUGINSDIR\license.txt" "$BootDir\multiboot\license.txt"   
+  CopyFiles "$PLUGINSDIR\gfxboot.c32" "$BootDir\multiboot\gfxboot.c32"
   CopyFiles "$PLUGINSDIR\vesamenu.c32" "$BootDir\multiboot\vesamenu.c32"
   CopyFiles "$PLUGINSDIR\menu.c32" "$BootDir\multiboot\menu.c32"  
   CopyFiles "$PLUGINSDIR\chain.c32" "$BootDir\multiboot\chain.c32"
@@ -1077,6 +1081,7 @@ Function DoSyslinux ; Install Syslinux on USB
   CopyFiles "$PLUGINSDIR\memdisk" "$BootDir\multiboot\memdisk"
 ; Copy these files to multiboot\menu
   DetailPrint "Adding required files to the $BootDir\multiboot\menu directory..." 
+  CopyFiles "$PLUGINSDIR\gfxboot.c32" "$BootDir\multiboot\menu\gfxboot.c32"
   CopyFiles "$PLUGINSDIR\vesamenu.c32" "$BootDir\multiboot\menu\vesamenu.c32"
   CopyFiles "$PLUGINSDIR\menu.c32" "$BootDir\multiboot\menu\menu.c32"  
   CopyFiles "$PLUGINSDIR\chain.c32" "$BootDir\multiboot\menu\chain.c32"
@@ -1093,6 +1098,7 @@ Function DoSyslinux ; Install Syslinux on USB
   CopyFiles "$PLUGINSDIR\YUMI-Copying.txt" "$BootDir\multiboot\YUMI-Copying.txt" 
   CopyFiles "$PLUGINSDIR\YUMI-Readme.txt" "$BootDir\multiboot\YUMI-Readme.txt" 
   CopyFiles "$PLUGINSDIR\license.txt" "$BootDir\multiboot\license.txt"   
+  CopyFiles "$PLUGINSDIR\gfxboot.c32" "$BootDir\multiboot\gfxboot.c32"
   CopyFiles "$PLUGINSDIR\vesamenu.c32" "$BootDir\multiboot\vesamenu.c32"
   CopyFiles "$PLUGINSDIR\menu.c32" "$BootDir\multiboot\menu.c32"  
   CopyFiles "$PLUGINSDIR\chain.c32" "$BootDir\multiboot\chain.c32"
@@ -1101,6 +1107,7 @@ Function DoSyslinux ; Install Syslinux on USB
   CopyFiles "$PLUGINSDIR\memdisk" "$BootDir\multiboot\memdisk"
 ; Copy these files to multiboot\menu
   DetailPrint "Adding required files to the $BootDir\multiboot\menu directory..." 
+  CopyFiles "$PLUGINSDIR\gfxboot.c32" "$BootDir\multiboot\menu\gfxboot.c32"
   CopyFiles "$PLUGINSDIR\vesamenu.c32" "$BootDir\multiboot\menu\vesamenu.c32"
   CopyFiles "$PLUGINSDIR\menu.c32" "$BootDir\multiboot\menu\menu.c32"  
   CopyFiles "$PLUGINSDIR\chain.c32" "$BootDir\multiboot\menu\chain.c32"
@@ -1112,6 +1119,7 @@ Function DoSyslinux ; Install Syslinux on USB
   ${IfNot} ${FileExists} $BootDir\multiboot\menu\vesamenu.c32
 ; Copy these files to multiboot\menu
   DetailPrint "Adding required files to the $BootDir\multiboot\menu directory..." 
+  CopyFiles "$PLUGINSDIR\gfxboot.c32" "$BootDir\multiboot\menu\gfxboot.c32"
   CopyFiles "$PLUGINSDIR\vesamenu.c32" "$BootDir\multiboot\menu\vesamenu.c32"
   CopyFiles "$PLUGINSDIR\menu.c32" "$BootDir\multiboot\menu\menu.c32"  
   CopyFiles "$PLUGINSDIR\chain.c32" "$BootDir\multiboot\menu\chain.c32"
@@ -1154,7 +1162,7 @@ Pop $NameThatISO
   # BCD is already installed
   # Add new BCD entry
   MessageBox MB_ICONSTOP|MB_OK "ABORTING! - ($DestDisk) - ($JustDrive) - contains a WINDOWS/SYSTEM32 Directory."
-  Quit
+#  Quit
  ${EndIf}
  
  
@@ -1164,7 +1172,7 @@ Pop $NameThatISO
  
  ${If} ${FileExists} "$BootDir\windows\system32" ; additional safeguard to protect from potential user ignorance. 
  MessageBox MB_ICONSTOP|MB_OK "ABORTING! ($DestDisk) contains a WINDOWS/SYSTEM32 Directory."
- Quit
+# Quit
  ${EndIf}
  
  ${If} $FormatMe == "Yes" 
@@ -1308,6 +1316,7 @@ StrCpy $R9 0 ; we start on page 0
   File /oname=$PLUGINSDIR\YUMI-Copying.txt "YUMI-Copying.txt" 
   File /oname=$PLUGINSDIR\YUMI-Readme.txt "YUMI-Readme.txt" 
   File /oname=$PLUGINSDIR\license.txt "license.txt"   
+  File /oname=$PLUGINSDIR\gfxboot.c32 "gfxboot.c32" 
   File /oname=$PLUGINSDIR\vesamenu.c32 "vesamenu.c32" 
   File /oname=$PLUGINSDIR\menu.c32 "menu.c32"    
   File /oname=$PLUGINSDIR\memdisk "memdisk" 
