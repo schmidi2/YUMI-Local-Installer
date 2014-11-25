@@ -188,6 +188,7 @@ Function SetISOFileName ; Distro2Check (Name of the Distro), ISO2Check2 (The ISO
  !insertmacro SetISOFileNames "Hiren's Boot CD" "Hiren*.iso" "NONE" "NULL" "other.cfg" "" ""
  !insertmacro SetISOFileNames "Kon-Boot FREE" "kon-boot*free.zip" "https://www.dropbox.com/s/f5i4g9vlmwoxrtp/kon-boot1.1-free.zip" "NULL" "other.cfg" "http://www.piotrbania.com/all/kon-boot/" "Kon-Boot" 
  !insertmacro SetISOFileNames "Kon-Boot Purchased" "kon-boot*.exe" "NONE" "NULL" "other.cfg" "http://www.piotrbania.com/all/kon-boot/" "Kon-Boot" 
+ !insertmacro SetISOFileNames "iPXE" "ipxe.iso" "http://boot.ipxe.org/ipxe.iso" "NULL" "system.cfg" "http://ipxe.org/" "iPXE"
 
 ; For Syslinux --- !insertmacro SetISOFileNames "Windows Vista/7/8 Installer" "*.iso" "NONE" "NULL" "other.cfg" "" ""
  !insertmacro SetISOFileNames "Windows Vista/7/8 Installer" "*.iso" "NONE" "NULL" "menu.lst" "" "" 
