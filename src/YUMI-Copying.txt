@@ -1,7 +1,5 @@
-YUMI (Your Universal Multiboot Installer) ©2011-2014 Lance www.pendrivelinux.com
-This Open Source tool is covered under GNU General Public License Version 2
-Source Code is made available at time of download from the official YUMI page:
-http://www.pendrivelinux.com/yumi-multiboot-usb-creator/
+Windows BCD Multiboot Installer © Benjamin Schmidt <schmidi2@directbox.com>
+Homepage: https://github.com/schmidi2/<PROJECTNAME>
 
 IMPORTANT! ABSOLUTELY NO WARRANTY IS BEING OFFERED WITH THIS TOOL:
 
@@ -15,6 +13,14 @@ ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
 By Proceeding to use this tool, you agree not to hold it's author accountable 
 for any damages that could potentially arise from it's use or misuse.
+
+-------------------------------------------------------------------------------------------------
+
+This tool is a fork based on YUMI:
+YUMI (Your Universal Multiboot Installer) ©2011-2014 Lance www.pendrivelinux.com
+This Open Source tool is covered under GNU General Public License Version 2
+Source Code is made available at time of download from the official YUMI page:
+http://www.pendrivelinux.com/yumi-multiboot-usb-creator/
 
 -------------------------------------------------------------------------------------------------
 

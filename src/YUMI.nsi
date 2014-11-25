@@ -7,15 +7,15 @@
 ; NSIS Installer © Contributors http://nsis.sourceforge.net - Install NSIS to compile this script. http://nsis.sourceforge.net/Download
 ; YUMI may contain remnants of Cedric Tissieres's Tazusb.exe for Slitaz (slitaz@objectif-securite.ch), as his work was used as a base for singular distro installers that preceded YUMI.
 
-!define NAME "YUMI"
-!define FILENAME "YUMI"
-!define VERSION "2.0.1.2"
+!define NAME "Windows BCD Multiboot Installer"
+!define FILENAME "WBMI"
+!define VERSION "0.1.0.0"
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\nsis1-install.ico"
 
 ; MoreInfo Plugin - Adds Version Tab fields to Properties. Plugin created by onad http://nsis.sourceforge.net/MoreInfo_plug-in
 VIProductVersion "${VERSION}"
-VIAddVersionKey CompanyName "pendrivelinux.com"
-VIAddVersionKey LegalCopyright "Copyright ©2010-2014 Lance Pendrivelinux.com"
+VIAddVersionKey CompanyName ""
+VIAddVersionKey LegalCopyright "Copyright © Benjamin Schmidt <schmidi2@directbox.com>"
 VIAddVersionKey FileVersion "${VERSION}"
 VIAddVersionKey FileDescription "Automated Universal MultiBoot UFD Creation Tool"
 VIAddVersionKey License "GPL Version 2"
@@ -117,11 +117,20 @@ Var Persistence
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 !define MUI_HEADERIMAGE_RIGHT
 
+
+!define MUI_WELCOMEFINISHPAGE_BITMAP "finish.bmp"
+
+
+; Welcome Page
+#!define MUI_WELCOMEPAGE_TITLE_3LINES "Welcome to this :)"  THIS DOESNT WORK
+!define MUI_WELCOMEPAGE_TEXT "This tool allows you to add multiboot functionality without using a usb stick. If you want to try out a new LINUX distribution on your pc, there is no need for a usb stick anymore. With this tool, you can just extend your windows boot loader with a new entry called MULTIBOOT and select your distribution. You can have as many distribution you like$\r$\nBe aware that you use this tool WITHOUT ANY WARRANTY. "
+!insertmacro MUI_PAGE_WELCOME
+
 ; License Agreement Page
-!define MUI_TEXT_LICENSE_SUBTITLE $(License_Subtitle)
-!define MUI_LICENSEPAGE_TEXT_TOP $(License_Text_Top)
-!define MUI_LICENSEPAGE_TEXT_BOTTOM $(License_Text_Bottom)
-!define MUI_PAGE_CUSTOMFUNCTION_PRE License_PreFunction
+#!define MUI_TEXT_LICENSE_SUBTITLE $(License_Subtitle)
+#!define MUI_LICENSEPAGE_TEXT_TOP $(License_Text_Top)
+#!define MUI_LICENSEPAGE_TEXT_BOTTOM $(License_Text_Bottom)
+#!define MUI_PAGE_CUSTOMFUNCTION_PRE License_PreFunction
 !insertmacro MUI_PAGE_LICENSE "YUMI-Copying.txt"
 
 ; Distro Selection Page
@@ -187,7 +196,12 @@ Function SelectionsPage
   nsDialogs::Create 1018
   Pop $Dialog 
 
- ${If} $RepeatInstall == "YES"   
+#    ${GetDrives} "ALL" DrivesList ; All Drives Listed
+	StrCpy $ShowAll "YES"
+	StrCpy $RepeatInstall "YES"
+  
+  
+${If} $RepeatInstall == "YES"   
  ${NSD_SetText} $DestDriveTxt "$DestDrive"
 
 ; To Install or Uninstall? That is the question!  
@@ -304,7 +318,7 @@ Function SelectionsPage
   StrCpy $JustISOName "NULL" ; Set to NULL until something is selected
   nsDialogs::Show  
   
- ${Else}
+${Else}
   
 ; To Install or Uninstall? That is the question!  
   ${NSD_CreateCheckBox} 60% 0 44% 15 "View or Remove Installed Distros?"
@@ -421,7 +435,7 @@ Function SelectionsPage
   ShowWindow $Uninstaller 0
   nsDialogs::Show 
 ;  ${NSD_FreeImage} $DonateHandle
- ${EndIf}
+${EndIf}
 FunctionEnd
 
 ; Function OnClickDonate
@@ -1127,7 +1141,27 @@ Push "$ISOFile"
 Push 1
 Call GrabNameOnly
 Pop $NameThatISO
+ 
+ # NEW CODE HERE ...
+ 
+ # Check if this is the partition C:
+ # ... Later: If its not partition C:, it should be a partition on a other harddisk than C:
 
+# DestDisk = C:
+# JustDrive = C:\
+ 
+ ${If} $DestDisk == "C:" 
+  # BCD is already installed
+  # Add new BCD entry
+  MessageBox MB_ICONSTOP|MB_OK "ABORTING! - ($DestDisk) - ($JustDrive) - contains a WINDOWS/SYSTEM32 Directory."
+  Quit
+ ${EndIf}
+ 
+ 
+ # ... NEW CODE HERE
+ 
+ 
+ 
  ${If} ${FileExists} "$BootDir\windows\system32" ; additional safeguard to protect from potential user ignorance. 
  MessageBox MB_ICONSTOP|MB_OK "ABORTING! ($DestDisk) contains a WINDOWS/SYSTEM32 Directory."
  Quit
