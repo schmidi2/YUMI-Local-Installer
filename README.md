@@ -18,18 +18,23 @@ Start the setup file.
 
 Build
 -
-# Install NSIS (Nullsoft Scriptable Install System) from http://nsis.sourceforge.net/Download.
-# Open NSIS from the start menu.
-# Goto "Compile NSI scripts".
-# Open File "YUMI.nsi". Compilation starts.
-# YUMI "YUMI-2.0.1.2.exe" was created in the same directory.
+1. Install NSIS (Nullsoft Scriptable Install System) from http://nsis.sourceforge.net/Download.
+2. Open NSIS from the start menu.
+3. Goto "Compile NSI scripts".
+4. Open File "YUMI.nsi". Compilation starts.
+5. YUMI "YUMI-2.0.1.2.exe" was created in the same directory.
 
 
 FAQ
 -
 Why is this code not merged into YUMI
  It will be maybe once. But this YUMI fork also has an uninstaller. YUMI doesn't have this uninstaller cause it doesn't install on locally but on a removable device.
- 
+
+License
+-
+
+Credits
+-
  
 TODO
 -
